@@ -20,5 +20,5 @@ jobs:
 
     - name: Push image
       run: |
-        docker tag myapp:${{ github.sha }} zyzornatti/myapp:${{ github.sha }}
+        docker tag py-app:${{ github.sha }} zyzornatti/py-app:${{ github.sha }}
         docker push zyzornatti/py-app:${{ github.sha }}
