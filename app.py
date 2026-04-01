@@ -5,4 +5,4 @@ app = Flask(__name__)
 def home():
     return "CI/CD Pipeline Working!"
 
-app.run(host="0.0.0.0", port=5000)
+app.run(host="0.0.0.0", port=80)
