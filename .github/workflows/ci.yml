@@ -36,5 +36,22 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/flask-app:v1.0
-          ${{ secrets.DOCKER_USERNAME }}/flask-app:v1.0-${{ github.sha }}
+          ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
+          ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: SSH and Deploy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
+          docker stop flask-app || true
+          docker rm flask-app || true
+          docker run -d --name flask-app -p 80:5000 \
+            ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
