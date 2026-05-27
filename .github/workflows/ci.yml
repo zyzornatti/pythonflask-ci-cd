@@ -50,8 +50,31 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
-          docker stop flask-app || true
-          docker rm flask-app || true
-          docker run -d --name flask-app -p 80:5000 \
+          # Install Docker if not installed
+          if ! command -v docker &> /dev/null
+          then
+            echo "Docker not found. Installing..."
+            sudo apt update
+            sudo apt install -y docker.io
+
+            sudo systemctl start docker
+            sudo systemctl enable docker
+
+            sudo usermod -aG docker $USER
+          fi
+
+          # Verify Docker
+          sudo docker --version
+
+          # Pull latest image
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
+
+          # Stop and remove old container
+          sudo docker stop flask-app || true
+          sudo docker rm flask-app || true
+
+          # Run new container
+          sudo docker run -d \
+            --name flask-app \ 
+            -p 80:5000 \ 
             ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
