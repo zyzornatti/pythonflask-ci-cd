@@ -36,5 +36,5 @@ jobs:
         context: .
         push: true
         tags: |
-        ${{ secrets.DOCKER_USERNAME }}/flask-app:v1.0
-        ${{ secrets.DOCKER_USERNAME }}/flask-app:v1.0-${{ github.sha }}
+          ${{ secrets.DOCKER_USERNAME }}/flask-app:v1.0
+          ${{ secrets.DOCKER_USERNAME }}/flask-app:v1.0-${{ github.sha }}
