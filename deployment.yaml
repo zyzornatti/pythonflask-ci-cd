@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: py-app
+  labels:
+    app: py-app
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: py-app
+
+  template:
+    metadata:
+      labels:
+        app: py-app
+    spec:
+      containers:
+        - name: py-app
+          image: zyzornatti/py-app:5c31071e92718f1b1a2db0d5c0f78fdb8e8f811b
+          ports:
+            - containerPort: 5000
